@@ -1,14 +1,12 @@
-# T.I.N.A.C.    
+<h1 align="center"> T.I.N.A.C. </h1>
 
-<div align="center"><i>TINAC Is Not A Chat</i></div>
+<div align="center"><h3><i>TINAC Is Not A Chat</i></h2></div>
+
+## Descripción 
 
 > _A Java TCP Chat_
 
-## Descripción
-
-
-
-## ⛭ Ejecución
+## Ejecución
 
 ### Desde IntelliJ IDEA
 
