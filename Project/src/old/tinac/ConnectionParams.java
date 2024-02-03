@@ -1,4 +1,4 @@
-package tinac;
+package old.tinac;
 
 public interface ConnectionParams {
     static int DEFAULT_PORT = 60_000;

@@ -1,4 +1,4 @@
-package tinac_gui;
+package old.tinac_gui;
 
 import javax.swing.*;
 import java.awt.*;

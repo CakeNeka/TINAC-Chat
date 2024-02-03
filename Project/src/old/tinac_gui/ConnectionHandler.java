@@ -1,11 +1,11 @@
-package tinac;
+package old.tinac_gui;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+
+import static helper.ChatUtils.*;
 
 /**
  * Para cada cliente
@@ -36,17 +36,14 @@ public class ConnectionHandler extends Thread implements ConnectionParams {
             // Antes de entrar en el bucle, preguntamos al usuario por su nombre
             openConnection();
 
-            sendMessage("Servidor", "Introduce un nombre de usuario");
+            sendMessageToClient("Servidor", "Introduce un nombre de usuario");
             clientNick = in.readLine();
             logMessageToServer("Servidor", clientNick + " Se acaba de conectar, ¡a pasarlo súper a tope!");
-            sendMessage("Servidor", "Te has conectado con el nombre de usuario " + clientNick);
+            sendMessageToClient("Servidor", "Te has conectado con el nombre de usuario '" + clientNick + "'");
             sv.broadcastMessage("Servidor", clientNick + " entró al chat",this);
             out.println("ACK (" + getTime() + ")");
-            // TODO: broadcast/retransmitir mensaje a todos los clientes
-            closeStreams();
 
             while (active) {
-                openConnection();
 
                 // 2. Esperar mensaje del cliente
                 String clientMessage = in.readLine();
@@ -57,9 +54,9 @@ public class ConnectionHandler extends Thread implements ConnectionParams {
                 // 3. Envío de confirmación (Acknowledge)
                 out.println("ACK (" + getTime() + ")");
 
-                // 4. Cerrar canales
-                closeStreams();
             }
+            // 4. Cerrar canales
+            closeStreams();
             endConnection();
         } catch (IOException e) {
             e.printStackTrace();
@@ -79,33 +76,21 @@ public class ConnectionHandler extends Thread implements ConnectionParams {
         out = new PrintWriter(client.getOutputStream(), true);
     }
 
-    private String getTime() {
-        return DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
-    }
 
     // Muestra en la aplicación servidor un mensaje del cliente
     private void logMessageToServer(String messenger, String message) {
-        String log = String.format("[%s] %s: %s", getTime(), messenger , message);
+        String log = formatMessage(messenger, message);
         System.out.println(log);
-        saveMessage(log);
+        sv.saveToLogFile(log);
     }
 
     // Envía un mensaje al cliente
-    public void sendMessage(String messenger, String message) {
-        String msg = String.format("[%s] %s: %s", getTime(), messenger, message);
+    public void sendMessageToClient(String messenger, String message) {
+        String msg = formatMessage(messenger,message);
         out.println(msg);
-        saveMessage(msg);
+        sv.saveToLogFile(msg);
     }
 
-    private void saveMessage(String mensaje) {
-        try {
-            FileWriter fw = new FileWriter("chat.txt", true);
-            fw.write("\r\n" + mensaje);
-            fw.close();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    }
 
     public String identificarHost(SocketAddress IPcliente) {
         return IPcliente.toString().split("\\.")[3].split(":")[0];

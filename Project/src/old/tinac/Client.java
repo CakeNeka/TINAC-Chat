@@ -1,6 +1,9 @@
-package tinac_gui;
+/* Modificaciones sobre la primera versión
+    - Se envían mensajes en lugar de bytes.
+*/
 
-import javax.swing.*;
+package old.tinac;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -50,7 +53,7 @@ public class Client implements ConnectionParams {
 
 
     /**
-     * 1. Establece conexión con hilo principal
+     * 1. Esablece conexión con hilo principal
      * 2. Espera a que el servidor envíe el nuevo puerto
      * 3. Cierra la conexión con el servidor
      * 4. Establece nueva conexión con el puerto que ha recibido del servidor
@@ -59,39 +62,30 @@ public class Client implements ConnectionParams {
      */
     public static void main(String[] args) {
         try {
-
             Client cliente = new Client("localhost", DEFAULT_PORT);
-
-            ClientFrame frame = new ClientFrame("T.I", cliente);
-            frame.setVisible(true);
-            System.out.println(frame);
-
             cliente.start(); // 1
             int newPort = Integer.parseInt(cliente.readMessage()); // 2
             cliente.stop(); // 3
             cliente.serverPort = newPort;
 
+
             String userInput;
-            cliente.start(); // 4
             do {
-                ServerListener serverListener = new ServerListener(cliente, frame);
+                cliente.start(); // 4
+                ServerListener serverListener = new ServerListener(cliente);
                 serverListener.start();
 
-                /*
                 BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
                 userInput = br.readLine(); // Recibe entrada por teclado
                 cliente.sendMessage(userInput); // Envía mensaje al servidor
-                */
 
 
                 //Cerramos la comunicación y paramos el hilo que controla la entrada del servidor
                 serverListener.join(); // Esperamos a que finalize el hilo
-            } while (true);
-           /*
-            cliente.closeStreams();
+                cliente.closeStreams();
+            } while (!userInput.equals(EXIT_COMMAND));
             cliente.stop();
-            */
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -109,11 +103,9 @@ public class Client implements ConnectionParams {
  */
 class ServerListener extends Thread {
     private Client client;
-    private ClientFrame frame;
 
-    ServerListener(Client client, ClientFrame frame) {
+    ServerListener(Client client) {
         this.client = client;
-        this.frame = frame;
     }
 
     @Override
@@ -123,11 +115,8 @@ class ServerListener extends Thread {
             while (!acknowledged) {
                 if (client.canRead()) { // comprobación necesaria para que el hilo no quede a la espera
                     String receivedMessage = client.readMessage();
+                    System.out.println(receivedMessage);
                     acknowledged = receivedMessage.startsWith("ACK");
-                    if (!acknowledged) { // No imprimir el mensaje si es "ACK
-                        System.out.println(receivedMessage);
-                        frame.receiveMessage(receivedMessage);
-                    }
                 }
             }
         } catch (IOException e) {

@@ -14,7 +14,7 @@ Queda Pendiente:
             - Cambiar su nombre de usuario.
             - Consultar usuarios conectados.
 */
-package tinac;
+package old.tinac;
 
 import java.io.IOException;
 import java.io.PrintWriter;

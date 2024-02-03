@@ -14,7 +14,7 @@ Queda Pendiente:
             - Cambiar su nombre de usuario.
             - Consultar usuarios conectados.
 */
-package tinac_gui;
+package old.tinac_gui;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import static tinac_gui.helper.ChatUtils.*;
+import static helper.ChatUtils.*;
 
 
 public class Server implements ConnectionParams {
