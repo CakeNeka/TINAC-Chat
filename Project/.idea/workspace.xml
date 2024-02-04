@@ -5,7 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e8b404e5-9217-4950-a0b2-a66924e7184d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../CHANGELOG.md" beforeDir="false" afterPath="$PROJECT_DIR$/../CHANGELOG.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../todo.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../todo.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -47,16 +46,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "D:/Repos/TINAC-Chat/Project/lib/flatlaf-3.3.jar",
-    "project.structure.last.edited": "Libraries",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.2"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Repos/TINAC-Chat/Project/lib/flatlaf-3.3.jar&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\Repos\TINAC-Chat\Project\src\tinac" />

@@ -10,11 +10,9 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
+import javax.swing.text.DefaultCaret;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.Socket;
@@ -68,10 +66,6 @@ public class Client extends JFrame implements ChatConstants {
                 while (active) {
                     String msg = input.readLine();
                     chatArea.append(msg + System.lineSeparator());
-                    System.out.println(scrollPane.getVerticalScrollBar().getMaximum());
-
-                    // TODO: Scroll no funciona correctamente
-                    scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum());
                 }
                 close();
             } catch (IOException e) {
@@ -91,6 +85,10 @@ public class Client extends JFrame implements ChatConstants {
         chatArea.setWrapStyleWord(false);
         chatArea.setFocusable(false);
         scrollPane = new JScrollPane(chatArea);
+
+        // Autoscroll
+        scrollPane.getVerticalScrollBar().addAdjustmentListener(e -> e.getAdjustable().setValue(e.getAdjustable().getMaximum()));
+
         scrollPane.setFocusable(false);
         Border border = BorderFactory.createEmptyBorder(10, 10, 10, 10);
         scrollPane.setViewportBorder(border);
@@ -117,7 +115,6 @@ public class Client extends JFrame implements ChatConstants {
             imagePanel.setFocusable(false);
             imagePanel.setLayout(new BorderLayout());
             imagePanel.add(scrollPane, BorderLayout.CENTER);
-            System.out.println("Image set successfully");
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -139,15 +136,13 @@ public class Client extends JFrame implements ChatConstants {
         add(inputPanel, BorderLayout.SOUTH);
 
 
+        /*
         // Set a custom font for the title
         Font titleFont = new Font("Comic Sans ms", Font.BOLD, 20);
         System.out.println(titleFont);
         inputPanel.setFont(titleFont);
         getRootPane().setFont(titleFont);
-
-        // You can also set the font for the title using UIManager
-        UIManager.put("OptionPane.messageFont", titleFont);
-        UIManager.put("OptionPane.buttonFont", titleFont);
+         */
 
         // Set frame properties
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
