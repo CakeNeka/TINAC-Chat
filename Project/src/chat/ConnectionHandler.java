@@ -2,6 +2,7 @@ package chat;
 
 import helper.ChatConstants;
 import helper.ChatUtils;
+import helper.ServerLogger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -29,8 +30,10 @@ public class ConnectionHandler extends Thread implements ChatConstants {
         if (!roomMessageMap.containsKey(room)) {
             roomMessageMap.put(room, new ArrayList<>());
         }
-        roomMessageMap.get(room).add(ChatUtils.formatMessage(sender, msg));
-        connections.stream().filter(c -> c.clientRoom == room).forEach(c -> c.sendMessage(sender, msg));
+
+        ServerLogger.logMessage(sender,msg,room);
+        roomMessageMap.get(room).add(ChatUtils.formatMessage(sender, msg)); // Almacena mensajes en ConcurrentHashMap
+        connections.stream().filter(c -> c.clientRoom == room).forEach(c -> c.sendMessage(sender, msg)); // Envía mensajes a clientes
     }
 
     public ConnectionHandler(int port) throws IOException {
@@ -119,6 +122,7 @@ public class ConnectionHandler extends Thread implements ChatConstants {
                 sendMessage("Servidor", "Has cambiado a la sala " + clientRoom);
                 sendMessage("Servidor", "Recuperando mensajes...");
 
+                // Devuelve todos los mensajes de la sala al cliente recién conectado
                 if (roomMessageMap.containsKey(clientRoom))
                     roomMessageMap.get(clientRoom).forEach(output::println);
 
@@ -131,14 +135,18 @@ public class ConnectionHandler extends Thread implements ChatConstants {
 
     private void showUsers() {
         sendMessage("Servidor", connections.size() + " usuarios conectados:");
-        connections.forEach(ch -> output.println(String.format(
-                "Nick: %-40s Sala: %s",ch.clientNick, ch.clientRoom
+        connections.forEach(ch -> output.printf(String.format(
+                "Nick: %-40s Sala: %s\n",ch.clientNick, ch.clientRoom
+        )));
+
+        // TODO: Debug, remove
+        connections.forEach(ch -> System.out.printf(String.format(
+                "Nick: %-40s Sala: %s\n",ch.clientNick, ch.clientRoom
         )));
     }
 
     private void showActiveRooms() {
-        List<Integer> openRooms = getOpenRooms();
-        String msg = String.format("%d salas activas: %s", openRooms.size(), openRooms);
+        String msg = String.format("%d sala(s) activas: %s", getOpenRooms().size(), getOpenRooms());
 
         sendMessage("Servidor", msg);
     }
@@ -164,7 +172,7 @@ public class ConnectionHandler extends Thread implements ChatConstants {
                 server.getInetAddress().toString(),
                 server.getLocalPort(),
                 client.getInetAddress(),
-                client.getLocalPort() + " | " + client.getLocalPort() // Todo: ¿Cual es el bueno?
+                client.getLocalPort() + " | " + client.getLocalPort() // Todo: ¿Cual es el bueno? Los dos son iguales
         );
         sendMessage("Servidor" , message);
     }

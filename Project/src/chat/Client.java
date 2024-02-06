@@ -110,7 +110,7 @@ public class Client extends JFrame implements ChatConstants {
         // Set background image
         ImagePanel imagePanel = null;
         try {
-            BufferedImage image = ImageIO.read(new File("resources/background.gif"));
+            BufferedImage image = ImageIO.read(new File("files/resources/background.gif"));
             imagePanel = new ImagePanel(image);
             imagePanel.setFocusable(false);
             imagePanel.setLayout(new BorderLayout());
@@ -127,7 +127,7 @@ public class Client extends JFrame implements ChatConstants {
         }
 
         JPanel inputPanel = new JPanel();
-        inputPanel.setBorder(BorderFactory.createTitledBorder("Escribe!!"));
+        inputPanel.setBorder(BorderFactory.createTitledBorder("Usuario: | Sala:"));
         inputPanel.setLayout(new BorderLayout());
         inputPanel.setPreferredSize(new Dimension(500, 50));
         inputPanel.add(inputField, BorderLayout.CENTER);

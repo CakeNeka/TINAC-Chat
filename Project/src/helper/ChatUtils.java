@@ -2,8 +2,10 @@ package helper;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 public class ChatUtils {
     /**
@@ -12,6 +14,10 @@ public class ChatUtils {
      */
     public static String getTime() {
         return DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
+    }
+
+    public static String getDate() {
+        return new SimpleDateFormat("yyyyMMdd").format(new Date());
     }
 
     /**

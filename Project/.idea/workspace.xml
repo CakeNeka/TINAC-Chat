@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e8b404e5-9217-4950-a0b2-a66924e7184d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../todo.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../todo.txt" afterDir="false" />
-    </list>
+    <list default="true" id="e8b404e5-9217-4950-a0b2-a66924e7184d" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -93,6 +91,19 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="ServerLogger" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="helper.ServerLogger" />
+      <module name="tinac" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="helper.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="chat.Client (2)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="chat.Client" />
       <module name="tinac" />
@@ -119,21 +130,8 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="old.tinac_gui.Server" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="old.tinac_gui.Server" />
-      <module name="tinac" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="old.tinac_gui.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <list>
-      <item itemvalue="Application.old.tinac_gui.Server" />
+      <item itemvalue="Application.ServerLogger" />
       <item itemvalue="Application.Client" />
       <item itemvalue="Application.chat.Client (2)" />
       <item itemvalue="Application.Server" />
@@ -143,9 +141,9 @@
       <list>
         <item itemvalue="Application.Client" />
         <item itemvalue="Application.Server" />
+        <item itemvalue="Application.ServerLogger" />
         <item itemvalue="Application.chat.Client (2)" />
         <item itemvalue="Application.chat.Client" />
-        <item itemvalue="Application.old.tinac_gui.Server" />
       </list>
     </recent_temporary>
   </component>
