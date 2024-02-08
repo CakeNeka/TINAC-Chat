@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
 import javax.swing.text.DefaultCaret;
 import java.awt.*;
 import java.awt.event.*;
@@ -20,16 +21,22 @@ import java.net.Socket;
 public class Client extends JFrame implements ChatConstants {
 
     // UI components
-    JTextArea chatArea;
+    private JTextArea chatArea;
+    private JScrollPane scrollPane;
     private JTextField inputField;
+    private TitledBorder titledBorder;
 
+    // UI Data
+    private String clientNick;
+    private String clientRoom;
+
+    // Connection objects
     private Socket server;
     private PrintWriter output;
     private BufferedReader input;
     private String ip;
     private int port;
     private Thread serverListener;
-    private JScrollPane scrollPane;
     private boolean active = true;
 
     public Client(String ip, int port) throws IOException {
@@ -65,7 +72,12 @@ public class Client extends JFrame implements ChatConstants {
             try {
                 while (active) {
                     String msg = input.readLine();
-                    chatArea.append(msg + System.lineSeparator());
+                    if (msg.startsWith("!room"))
+                        setClientRoom(msg.split("=")[1]);
+                    else if (msg.startsWith("!nick"))
+                        setClientNick(msg.split("=")[1]);
+                    else
+                        chatArea.append(msg + System.lineSeparator());
                 }
                 close();
             } catch (IOException e) {
@@ -73,7 +85,32 @@ public class Client extends JFrame implements ChatConstants {
             }
         });
         serverListener.start();
+    }
 
+    private void sendMessage() {
+        String text = inputField.getText().trim();
+        if (!text.isEmpty()) {
+            output.println(text); // Send text to server
+            inputField.setText(""); // Clear input field
+            if (text.equals(COMMAND_QUIT)) {
+                active = false;
+            }
+        }
+    }
+
+    private void setClientNick(String clientNick) {
+        this.clientNick = clientNick;
+        updateClientData();
+    }
+
+    private void setClientRoom(String clientRoom) {
+        this.clientRoom = clientRoom;
+        updateClientData();
+    }
+
+    private void updateClientData() {
+        titledBorder.setTitle(String.format("<html><b>Usuario:</b> %s | <b>Sala:</b> %s</html>", clientNick, clientRoom));
+        repaint();
     }
 
     public void initComponents() {
@@ -127,7 +164,8 @@ public class Client extends JFrame implements ChatConstants {
         }
 
         JPanel inputPanel = new JPanel();
-        inputPanel.setBorder(BorderFactory.createTitledBorder("Usuario: | Sala:"));
+        titledBorder = BorderFactory.createTitledBorder("Usuario: | Sala: ");
+        inputPanel.setBorder(titledBorder);
         inputPanel.setLayout(new BorderLayout());
         inputPanel.setPreferredSize(new Dimension(500, 50));
         inputPanel.add(inputField, BorderLayout.CENTER);
@@ -154,17 +192,6 @@ public class Client extends JFrame implements ChatConstants {
         setVisible(true);
     }
 
-    private void sendMessage() {
-        String text = inputField.getText().trim();
-        if (!text.isEmpty()) {
-            output.println(text);
-            inputField.setText("");
-            if (text.equals(COMMAND_QUIT)) {
-                active = false;
-            }
-        }
-    }
-
     public static void main(String[] args) {
         FlatDarculaLaf.setup();
         FlatDarculaLaf.setPreferredFontFamily("Comic Sans ms");
@@ -179,15 +206,30 @@ public class Client extends JFrame implements ChatConstants {
 
     private static class ImagePanel extends JPanel {
         private Image backgroundImage;
+        private int imageHeight;
+        private int imageWidth;
 
         public ImagePanel(Image backgroundImage) {
             this.backgroundImage = backgroundImage;
+            imageHeight = backgroundImage.getHeight(this);
+            imageWidth = backgroundImage.getWidth(this);
+
         }
 
+        // Tiled background =)
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+            int panelWidth = getWidth();
+            int panelHeight = getHeight();
+
+            for (int x = 0; x <= panelWidth; x += imageWidth) {
+                for (int y = 0; y <= panelHeight; y += imageHeight) {
+                    g.drawImage(backgroundImage, x, y, this);
+                }
+            }
+
+            // g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
         }
     }
 }

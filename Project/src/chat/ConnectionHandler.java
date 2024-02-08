@@ -26,14 +26,25 @@ public class ConnectionHandler extends Thread implements ChatConstants {
     private String clientNick;
     private int clientRoom;
 
-    static void broadcastMessage(String sender, String msg, int room) {
+    /**
+     * Broadcasts message to given room
+     */
+    void broadcastMessage(String sender, String message, int room) {
         if (!roomMessageMap.containsKey(room)) {
             roomMessageMap.put(room, new ArrayList<>());
         }
 
-        ServerLogger.logMessage(sender,msg,room);
-        roomMessageMap.get(room).add(ChatUtils.formatMessage(sender, msg)); // Almacena mensajes en ConcurrentHashMap
-        connections.stream().filter(c -> c.clientRoom == room).forEach(c -> c.sendMessage(sender, msg)); // Envía mensajes a clientes
+        ServerLogger.logMessage(sender,message,room);
+        roomMessageMap.get(room).add(ChatUtils.formatMessage(sender, message)); // Almacena mensajes en ConcurrentHashMap
+        connections.stream().filter(c -> c.clientRoom == room).forEach(c -> c.sendMessage(sender, message)); // Envía mensajes a clientes
+    }
+
+    /**
+     * Broadcasts message to all rooms
+     */
+    void broadcastMessage(String sender, String message) {
+        connections.forEach(con -> con.sendMessage(sender,message));
+        getOpenRooms().forEach(room -> ServerLogger.logMessage(sender, message, room));
     }
 
     public ConnectionHandler(int port) throws IOException {
@@ -53,10 +64,12 @@ public class ConnectionHandler extends Thread implements ChatConstants {
             input = new BufferedReader(new InputStreamReader(client.getInputStream()));
             output = new PrintWriter(client.getOutputStream(), true);
             output.println(WELCOME_MESSAGE);
+            output.println("!nick="+clientNick); // informa que nick cambió, para mostrarlo en la UI
+            output.println("!room="+clientRoom);
+
             while (active) {
                 String clientMessage = input.readLine();
-                System.out.println(clientMessage);
-                active = manageMessage(clientMessage);
+                active = parseMessage(clientMessage);
             }
 
             input.close();
@@ -69,7 +82,7 @@ public class ConnectionHandler extends Thread implements ChatConstants {
         }
     }
 
-    private boolean manageMessage(String msg) {
+    private boolean parseMessage(String msg) {
         msg = msg.trim();
         if (msg.startsWith("/")) {
             return handleCommands(msg);
@@ -84,6 +97,7 @@ public class ConnectionHandler extends Thread implements ChatConstants {
         switch (args[0]) {
             case COMMAND_HELP -> sendMessage("Servidor",ChatConstants.HELP_MESSAGE);
             case COMMAND_QUIT -> {
+                broadcastMessage("Servidor", clientNick + " abandonó el chat, ¡Hasta la vista!");
                 return false;
             }
             case COMMAND_NICK -> changeNick(args);
@@ -107,6 +121,7 @@ public class ConnectionHandler extends Thread implements ChatConstants {
             String oldNick = clientNick;
             clientNick = String.join(" ", Arrays.copyOfRange(msg,1,msg.length));
             sendMessage("Servidor", "Tu nick ahora es " + clientNick);
+            output.println("!nick="+clientNick); // informa que nick cambió, para mostrarlo en la UI
             broadcastMessage("Servidor", oldNick + " cambió su nombre por " + clientNick,clientRoom);
         } else {
             sendMessage("Servidor", "Tu nick actualmente es \"" + clientNick + "\"");
@@ -121,6 +136,7 @@ public class ConnectionHandler extends Thread implements ChatConstants {
                 clientRoom = Integer.parseInt(msg[1]);
                 sendMessage("Servidor", "Has cambiado a la sala " + clientRoom);
                 sendMessage("Servidor", "Recuperando mensajes...");
+                output.println("!room="+clientRoom);
 
                 // Devuelve todos los mensajes de la sala al cliente recién conectado
                 if (roomMessageMap.containsKey(clientRoom))
@@ -135,14 +151,11 @@ public class ConnectionHandler extends Thread implements ChatConstants {
 
     private void showUsers() {
         sendMessage("Servidor", connections.size() + " usuarios conectados:");
+        // TODO.  items won't align if client app is not using a monospace font
         connections.forEach(ch -> output.printf(String.format(
                 "Nick: %-40s Sala: %s\n",ch.clientNick, ch.clientRoom
         )));
 
-        // TODO: Debug, remove
-        connections.forEach(ch -> System.out.printf(String.format(
-                "Nick: %-40s Sala: %s\n",ch.clientNick, ch.clientRoom
-        )));
     }
 
     private void showActiveRooms() {
@@ -172,7 +185,7 @@ public class ConnectionHandler extends Thread implements ChatConstants {
                 server.getInetAddress().toString(),
                 server.getLocalPort(),
                 client.getInetAddress(),
-                client.getLocalPort() + " | " + client.getLocalPort() // Todo: ¿Cual es el bueno? Los dos son iguales
+                client.getPort() + " | " + client.getLocalPort() // Todo: ¿Cual es el bueno? Los dos son iguales
         );
         sendMessage("Servidor" , message);
     }
