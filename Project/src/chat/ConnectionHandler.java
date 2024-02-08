@@ -71,15 +71,22 @@ public class ConnectionHandler extends Thread implements ChatConstants {
                 String clientMessage = input.readLine();
                 active = parseMessage(clientMessage);
             }
-
-            input.close();
-            output.close();
-            client.close();
-            server.close();
-            connections.remove(this);
+            closeConnection();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            try {
+                closeConnection();
+            } catch (IOException ignored) {
+            }
+            e.printStackTrace(); // TODO: Log errors
         }
+    }
+
+    private void closeConnection() throws IOException {
+        connections.remove(this);
+        input.close();
+        output.close();
+        client.close();
+        server.close();
     }
 
     private boolean parseMessage(String msg) {

@@ -19,7 +19,9 @@ public interface ChatConstants {
     String COMMAND_CONNECTED_USERS = "/users";
     String COMMAND_ACTIVE_ROOMS = "/rooms";
     String COMMAND_NET_INFO = "/netinfo";
+    /* Secret commands (client side) */
     String COMMAND_SECRET = "/mcr"; // does something unexpected
+    String COMMAND_BACKGROUND_CHANGE = "/bg"; // Changes background
 
     /* Messages */
 
