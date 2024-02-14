@@ -1,53 +1,79 @@
 package chat;
 
-import com.formdev.flatlaf.FlatDarculaLaf;
+import helper.Logger;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class LoginDialog extends JDialog {
 
-    public static void main(String[] args) {
-        FlatDarculaLaf.setup();
-        new LoginDialog();
-    }
-    public LoginDialog() {
-        setLayout(null);
+    Client parent;
+    public LoginDialog(Client parent) {
+        super(parent);
+        this.parent = parent;
+        JPanel panel = new JPanel();
+        panel.setLayout(null);
+        add(panel);
+
+        try {
+            BufferedImage image = ImageIO.read(getClass().getResource("/logo40x40.png"));
+            JLabel logoLabel = new JLabel();
+            logoLabel.setIcon(new ImageIcon(image));
+            logoLabel.setBounds(143,10,40,40);
+            panel.add(logoLabel);
+        } catch (Exception e) {
+            Logger.logClientError(e.getMessage());
+        }
 
         JLabel userLabel = new JLabel("Usuario");
-        userLabel.setBounds(20,20,80,25);
-        add(userLabel);
+        userLabel.setBounds(20,60,80,25);
+        panel.add(userLabel);
 
         JTextField userField = new JTextField(20);
-        userField.setBounds(110,20,165,25);
-        add(userField);
+        userField.setText(String.valueOf(parent.getPort()));
+        userField.setBounds(110,60,165,25);
+        panel.add(userField);
 
-        JLabel passwordLabel = new JLabel("Contraseña");
-        passwordLabel.setBounds(20,50,80,25);
-        add(passwordLabel);
+        JLabel roomLabel = new JLabel("Sala");
+        roomLabel.setBounds(20,90,80,25);
+        panel.add(roomLabel);
 
-        JPasswordField passwordField = new JPasswordField(20);
-        passwordField.setBounds(110,50,165,25);
-        add(passwordField);
+        JTextField roomField = new JTextField(20);
+        roomField.setText("0");
+        roomField.setBounds(110,90,165,25);
+        panel.add(roomField);
 
-        JButton btn = new JButton("Iniciar sesión");
-        btn.addActionListener(e -> {
+        JButton btn = new JButton("Unirse a la fiesta");
+        btn.addActionListener(e -> sendUserInfo(userField, roomField) );
+        btn.setBounds(40, 130, 220, 25);
+        panel.add(btn);
 
-        });
-        btn.setBounds(30, 90, 110, 25);
-        add(btn);
-
-        JButton btn2 = new JButton("Registrarse");
-        btn2.addActionListener(e -> {
-
-        });
-        btn2.setBounds(150, 90, 110, 25);
-        add(btn2);
-
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(new Dimension(315,200));
+        setSize(new Dimension(315,230));
         setTitle("login! :)");
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        setLocationRelativeTo(parent);
+        setModal(true);
         setResizable(false);
-        setVisible(true);
+    }
+
+    private void sendUserInfo(JTextField userField, JTextField roomField) {
+        String user = userField.getText();
+        String stringRoom = roomField.getText();
+        if (validInput(user, stringRoom)) {
+            parent.setInitialRoom(Integer.parseInt(stringRoom));
+            parent.setInitialUsername(user);
+            this.dispose();
+        }
+    }
+
+    private boolean validInput(String user, String stringRoom) {
+        try {
+            Integer.parseInt(stringRoom);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return !user.isEmpty();
     }
 }

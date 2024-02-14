@@ -31,6 +31,9 @@ public class Client extends JFrame implements ChatConstants {
     private String clientNick;
     private String clientRoom;
 
+    private String initialUsername;
+    private int initialRoom;
+
 
     // Connection objects
     private Socket server;
@@ -60,17 +63,32 @@ public class Client extends JFrame implements ChatConstants {
     }
 
     public void start() throws IOException {
-        login();
         connect();
         DataInputStream input = new DataInputStream(server.getInputStream());
         port = input.readInt();
         close();
         connect();
         initComponents();
+        login();
         startListenerThread();
+        sendCredentials();
     }
 
     private void login() {
+        JDialog login = new LoginDialog(this);
+        login.setVisible(true);
+    }
+    private void sendCredentials() {
+        output.println("/room " + initialRoom);
+        output.println("/nick " + initialUsername);
+    }
+
+    public void setInitialUsername(String user) {
+        initialUsername = user;
+    }
+
+    public void setInitialRoom(int room) {
+        initialRoom = room;
     }
 
     private void startListenerThread() {
@@ -211,7 +229,6 @@ public class Client extends JFrame implements ChatConstants {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 400);
         setMinimumSize(new Dimension(300,300));
-        // setResizable(false);
         setTitle("Star-crossed chat (>'-'<)");
         setLocationRelativeTo(null);
         setVisible(true);
@@ -230,6 +247,10 @@ public class Client extends JFrame implements ChatConstants {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public int getPort() {
+        return port;
     }
 
     public static void main(String[] args) {

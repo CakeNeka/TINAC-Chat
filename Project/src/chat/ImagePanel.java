@@ -11,7 +11,8 @@ public class ImagePanel extends JPanel {
     private int imageWidth;
 
     public ImagePanel(Image backgroundImage) {
-        setBackground(backgroundImage);
+        if (backgroundImage != null)
+            setBackground(backgroundImage);
     }
 
     public void setBackground(Image backgroundImage) {

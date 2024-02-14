@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e8b404e5-9217-4950-a0b2-a66924e7184d" name="Changes" comment="" />
+    <list default="true" id="e8b404e5-9217-4950-a0b2-a66924e7184d" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../todo.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../todo.txt" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -44,18 +46,19 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/Repos/TINAC-Chat/Project/lib/flatlaf-3.3.jar&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "last_opened_file_path": "D:/Repos/dam2/TINAC-Chat/Project/res/imgs",
+    "project.structure.last.edited": "Libraries",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.2"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Repos\dam2\TINAC-Chat\Project\res\imgs" />
       <recent name="D:\Repos\TINAC-Chat\Project\src\tinac" />
       <recent name="D:\Repos\TINAC-Chat\Project\src" />
       <recent name="$PROJECT_DIR$/src/tinac" />
@@ -64,9 +67,35 @@
       <recent name="chat" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Client">
+  <component name="RunManager" selected="Application.ChatLogReader">
+    <configuration name="ChatLogReader" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="logreader.ChatLogReader" />
+      <module name="tinac" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="logreader.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Client" type="Application" factoryName="Application" singleton="false" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="chat.Client" />
+      <module name="tinac" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="chat.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="LoginDialog" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chat.LoginDialog" />
       <module name="tinac" />
       <extension name="coverage">
         <pattern>
@@ -104,46 +133,20 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="chat.Client (2)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chat.Client" />
-      <module name="tinac" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="chat.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="chat.Client" type="Application" factoryName="Application" singleton="false" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chat.Client" />
-      <module name="tinac" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="chat.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <list>
+      <item itemvalue="Application.ChatLogReader" />
+      <item itemvalue="Application.LoginDialog" />
       <item itemvalue="Application.ServerLogger" />
       <item itemvalue="Application.Client" />
-      <item itemvalue="Application.chat.Client (2)" />
       <item itemvalue="Application.Server" />
-      <item itemvalue="Application.chat.Client" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.ChatLogReader" />
         <item itemvalue="Application.Client" />
         <item itemvalue="Application.Server" />
+        <item itemvalue="Application.LoginDialog" />
         <item itemvalue="Application.ServerLogger" />
-        <item itemvalue="Application.chat.Client (2)" />
-        <item itemvalue="Application.chat.Client" />
       </list>
     </recent_temporary>
   </component>
@@ -159,6 +162,9 @@
     <servers />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/Project$Server.ic" NAME="Server Coverage Results" MODIFIED="1707409627482" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>chat.*</FILTER>
+    </SUITE>
     <SUITE FILE_PATH="coverage/Project$Client.ic" NAME="Client Coverage Results" MODIFIED="1706999139930" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>chat.*</FILTER>
     </SUITE>

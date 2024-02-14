@@ -12,14 +12,16 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ConnectionHandler extends Thread implements ChatConstants {
-    static List<ConnectionHandler> connections = new ArrayList<>();
+    static List<ConnectionHandler> connections = new CopyOnWriteArrayList<>();
     static ConcurrentHashMap<Integer, List<String>> roomMessageMap = new ConcurrentHashMap<>();
     private final ServerSocket server;
     private Socket client;
 
     private boolean active;
+    private boolean firstNameChange = true;
     private BufferedReader input;
     private PrintWriter output;
 
@@ -63,9 +65,10 @@ public class ConnectionHandler extends Thread implements ChatConstants {
 
             input = new BufferedReader(new InputStreamReader(client.getInputStream()));
             output = new PrintWriter(client.getOutputStream(), true);
+
             output.println(WELCOME_MESSAGE);
-            output.println("!nick="+clientNick); // informa que nick cambió, para mostrarlo en la UI
-            output.println("!room="+clientRoom);
+            // output.println("!nick="+clientNick); // informa que nick cambió, para mostrarlo en la UI
+            // output.println("!room="+clientRoom);
 
             while (active) {
                 String clientMessage = input.readLine();
@@ -129,7 +132,10 @@ public class ConnectionHandler extends Thread implements ChatConstants {
             clientNick = String.join(" ", Arrays.copyOfRange(msg,1,msg.length));
             sendMessage("Servidor", "Tu nick ahora es " + clientNick);
             output.println("!nick="+clientNick); // informa que nick cambió, para mostrarlo en la UI
-            broadcastMessage("Servidor", oldNick + " cambió su nombre por " + clientNick,clientRoom);
+            if (!firstNameChange) {
+                broadcastMessage("Servidor", oldNick + " cambió su nombre por " + clientNick, clientRoom);
+            }
+            firstNameChange = false;
         } else {
             sendMessage("Servidor", "Tu nick actualmente es \"" + clientNick + "\"");
         }
@@ -141,7 +147,7 @@ public class ConnectionHandler extends Thread implements ChatConstants {
         } else {
             try {
                 clientRoom = Integer.parseInt(msg[1]);
-                sendMessage("Servidor", "Has cambiado a la sala " + clientRoom);
+                sendMessage("Servidor", "Te has unido a la sala " + clientRoom);
                 sendMessage("Servidor", "Recuperando mensajes...");
                 output.println("!room="+clientRoom);
 
@@ -165,7 +171,6 @@ public class ConnectionHandler extends Thread implements ChatConstants {
 
     private void showActiveRooms() {
         String msg = String.format("%d sala(s) activas: %s", getOpenRooms().size(), getOpenRooms());
-
         sendMessage("Servidor", msg);
     }
 
