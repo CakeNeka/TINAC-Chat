@@ -12,20 +12,19 @@ public interface ChatConstants {
     int MAX_PORT = 70000;
 
     /* Commands */
-    String COMMAND_HELP = "/help";
-    String COMMAND_QUIT = "/quit";
-    String COMMAND_NICK = "/nick";
-    String COMMAND_ROOM = "/room"; // no arg -> shows current room. arg -> changes room
-    String COMMAND_CONNECTED_USERS = "/users";
-    String COMMAND_ACTIVE_ROOMS = "/rooms";
-    String COMMAND_NET_INFO = "/netinfo";
-    /* Secret commands (client side) */
-    String COMMAND_SECRET = "/mcr"; // does something unexpected
-    String COMMAND_BACKGROUND_CHANGE = "/bg"; // Changes background
+    String COMMAND_HELP = "/help"; // Ayuda
+    String COMMAND_QUIT = "/quit"; // Sale de la aplicación
+    String COMMAND_NICK = "/nick"; // Cambia o muestra nick de cliente
+    String COMMAND_ROOM = "/room"; // Cambia o muestra la sala actual
+    String COMMAND_CONNECTED_USERS = "/users"; // Usuarios activos
+    String COMMAND_ACTIVE_ROOMS = "/rooms"; // Salas activas
+    String COMMAND_NET_INFO = "/netinfo"; // Información sobre la conexión
+    String COMMAND_SECRET = "/mcr"; // créditos
+    String COMMAND_BACKGROUND_CHANGE = "/bg"; // Cambia fondo
 
     /* Messages */
 
-    String WELCOME_MESSAGE = "Bienvenide al chat más diver 🖤";
+    String WELCOME_MESSAGE = "Bienvenida al chat más super divertido 🖤";
     String HELP_MESSAGE = """
             
             Comandos:
@@ -36,5 +35,8 @@ public interface ChatConstants {
             /users Muestra los usuarios conectados
             /rooms Muestra las salas activas
             /netinfo Muestra información sobre la conexión
+            """;
+    String CREDITS = """
+            Chat desarrollado con amor por Martina Victoria (✿◡‿◡)
             """;
 }

@@ -2,7 +2,7 @@ package chat;
 
 import helper.ChatConstants;
 import helper.ChatUtils;
-import helper.ServerLogger;
+import helper.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,9 +14,9 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ConnectionHandler extends Thread implements ChatConstants {
-    static List<ConnectionHandler> connections = new ArrayList<>(); // TODO use map <room,ConHandler>
+    static List<ConnectionHandler> connections = new ArrayList<>();
     static ConcurrentHashMap<Integer, List<String>> roomMessageMap = new ConcurrentHashMap<>();
-    private ServerSocket server;
+    private final ServerSocket server;
     private Socket client;
 
     private boolean active;
@@ -34,7 +34,7 @@ public class ConnectionHandler extends Thread implements ChatConstants {
             roomMessageMap.put(room, new ArrayList<>());
         }
 
-        ServerLogger.logMessage(sender,message,room);
+        Logger.logMessage(sender,message,room);
         roomMessageMap.get(room).add(ChatUtils.formatMessage(sender, message)); // Almacena mensajes en ConcurrentHashMap
         connections.stream().filter(c -> c.clientRoom == room).forEach(c -> c.sendMessage(sender, message)); // Envía mensajes a clientes
     }
@@ -42,9 +42,9 @@ public class ConnectionHandler extends Thread implements ChatConstants {
     /**
      * Broadcasts message to all rooms
      */
-    void broadcastMessage(String sender, String message) {
-        connections.forEach(con -> con.sendMessage(sender,message));
-        getOpenRooms().forEach(room -> ServerLogger.logMessage(sender, message, room));
+    void broadcastMessage(String message) {
+        connections.forEach(con -> con.sendMessage("Servidor",message));
+        getOpenRooms().forEach(room -> Logger.logMessage("Servidor", message, room));
     }
 
     public ConnectionHandler(int port) throws IOException {
@@ -75,9 +75,8 @@ public class ConnectionHandler extends Thread implements ChatConstants {
         } catch (IOException e) {
             try {
                 closeConnection();
-            } catch (IOException ignored) {
-            }
-            e.printStackTrace(); // TODO: Log errors
+            } catch (IOException ignored) { }
+            Logger.logServerError(e.getMessage());
         }
     }
 
@@ -104,7 +103,7 @@ public class ConnectionHandler extends Thread implements ChatConstants {
         switch (args[0]) {
             case COMMAND_HELP -> sendMessage("Servidor",ChatConstants.HELP_MESSAGE);
             case COMMAND_QUIT -> {
-                broadcastMessage("Servidor", clientNick + " abandonó el chat, ¡Hasta la vista!");
+                broadcastMessage(clientNick + " abandonó el chat, ¡Hasta la vista!");
                 return false;
             }
             case COMMAND_NICK -> changeNick(args);
@@ -112,6 +111,7 @@ public class ConnectionHandler extends Thread implements ChatConstants {
             case COMMAND_CONNECTED_USERS -> showUsers();
             case COMMAND_ACTIVE_ROOMS -> showActiveRooms();
             case COMMAND_NET_INFO -> showNetInfo();
+            case COMMAND_SECRET -> sendMessage("Servidor", CREDITS);
             default -> sendMessage("Servidor", "Comando \"" + msg + "\" no reconocido");
         }
         return true;
@@ -158,11 +158,9 @@ public class ConnectionHandler extends Thread implements ChatConstants {
 
     private void showUsers() {
         sendMessage("Servidor", connections.size() + " usuarios conectados:");
-        // TODO.  items won't align if client app is not using a monospace font
         connections.forEach(ch -> output.printf(String.format(
                 "Nick: %-40s Sala: %s\n",ch.clientNick, ch.clientRoom
         )));
-
     }
 
     private void showActiveRooms() {
@@ -174,7 +172,7 @@ public class ConnectionHandler extends Thread implements ChatConstants {
     private List<Integer> getOpenRooms(){
         Set<Integer> uniqueRooms = new HashSet<>();
         connections.forEach(ch -> uniqueRooms.add(ch.clientRoom));
-        return uniqueRooms.stream().sorted().toList(); // TODO: esto no es muy eficiente
+        return uniqueRooms.stream().sorted().toList();
     }
 
     private void showNetInfo() {
@@ -192,7 +190,7 @@ public class ConnectionHandler extends Thread implements ChatConstants {
                 server.getInetAddress().toString(),
                 server.getLocalPort(),
                 client.getInetAddress(),
-                client.getPort() + " | " + client.getLocalPort() // Todo: ¿Cual es el bueno? Los dos son iguales
+                client.getPort() + " | " + client.getLocalPort()
         );
         sendMessage("Servidor" , message);
     }

@@ -2,6 +2,7 @@ package chat;
 
 import com.formdev.flatlaf.*;
 import helper.ChatConstants;
+import helper.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -21,7 +22,6 @@ public class Client extends JFrame implements ChatConstants {
 
     // UI components
     private JTextArea chatArea;
-    private JScrollPane scrollPane;
     private JTextField inputField;
     private TitledBorder titledBorder;
     private ImagePanel imagePanel;
@@ -36,7 +36,7 @@ public class Client extends JFrame implements ChatConstants {
     private Socket server;
     private PrintWriter output;
     private BufferedReader input;
-    private String ip;
+    private final String ip;
     private int port;
     private Thread serverListener;
     private boolean active = true;
@@ -59,7 +59,8 @@ public class Client extends JFrame implements ChatConstants {
         dispose();
     }
 
-    private void start() throws IOException {
+    public void start() throws IOException {
+        login();
         connect();
         DataInputStream input = new DataInputStream(server.getInputStream());
         port = input.readInt();
@@ -67,6 +68,9 @@ public class Client extends JFrame implements ChatConstants {
         connect();
         initComponents();
         startListenerThread();
+    }
+
+    private void login() {
     }
 
     private void startListenerThread() {
@@ -85,7 +89,7 @@ public class Client extends JFrame implements ChatConstants {
                 }
                 close();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                Logger.logClientError(e.getMessage());
             }
         });
         serverListener.start();
@@ -145,7 +149,7 @@ public class Client extends JFrame implements ChatConstants {
         chatArea.setFocusable(false);
         chatArea.setOpaque(false);
         chatArea.setBackground(new Color(100,100,100,100));
-        scrollPane = new JScrollPane(chatArea);
+        JScrollPane scrollPane = new JScrollPane(chatArea);
         scrollPane.setBackground(new Color(100,100,100,100));
 
         // Autoscroll
@@ -194,15 +198,6 @@ public class Client extends JFrame implements ChatConstants {
 
         add(inputPanel, BorderLayout.SOUTH);
 
-
-        /*
-        // Set a custom font for the title
-        Font titleFont = new Font("Comic Sans ms", Font.BOLD, 20);
-        System.out.println(titleFont);
-        inputPanel.setFont(titleFont);
-        getRootPane().setFont(titleFont);
-        */
-
         // Al cerrar la ventana envía al servidor el comando "/quit"
         addWindowListener(new WindowAdapter() {
             @Override
@@ -243,43 +238,9 @@ public class Client extends JFrame implements ChatConstants {
             try {
                 new Client(SERVER_IP, SERVER_PORT).start();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                Logger.logClientError(e.getMessage());
             }
         });
     }
 
-}
-
-class ImagePanel extends JPanel {
-    private Image backgroundImage;
-    private int imageHeight;
-    private int imageWidth;
-
-    public ImagePanel(Image backgroundImage) {
-        setBackground(backgroundImage);
-    }
-
-    public void setBackground(Image backgroundImage) {
-        this.backgroundImage = backgroundImage;
-        imageHeight = backgroundImage.getHeight(this);
-        imageWidth = backgroundImage.getWidth(this);
-    }
-
-    public BufferedImage getBackgroundImage() {
-        return (BufferedImage) backgroundImage;
-    }
-
-    // Tiled background =)
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        int panelWidth = getWidth();
-        int panelHeight = getHeight();
-
-        for (int x = 0; x <= panelWidth; x += imageWidth) {
-            for (int y = 0; y <= panelHeight; y += imageHeight) {
-                g.drawImage(backgroundImage, x, y, this);
-            }
-        }
-    }
 }
