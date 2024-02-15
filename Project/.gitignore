@@ -29,5 +29,5 @@ bin/
 .DS_Store
 
 ### Chat ###
-files/logs/
+files/
 chat.txt

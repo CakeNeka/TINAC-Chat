@@ -21,14 +21,22 @@ mismo equipo. Con algunas modificaciones puede funcionar en red local.
 
 ## ⚙ Ejecución
 
+### Dependencias 
+
+Este proyecto utiliza la librería [flatlaf-3.3](https://mvnrepository.com/artifact/com.formdev/flatlaf)
+para mejorar el aspecto de la interfaz gráfica.
+
 ### Desde IntelliJ IDEA
 
-Es el IDE que estoy utilizando para desarrollar el proyecto. No utiliza ninguna librería externa.
+Es el IDE que estoy utilizando para desarrollar el proyecto. 
 
 - **Permitir la ejecución de multiples instancias de Cliente**
     1. Ir a la clase **Cliente**
     2. Arriba a la derecha, elegir clase `Client` e ir a `Edit Configurations`
     3. `Build and run -> Modify options -> Allow multiple instances`
+
+> [!NOTE]
+> El código fuente ha sido comentado =)
 
 ## ✨ Funcionalidades
 
@@ -53,7 +61,6 @@ Es el IDE que estoy utilizando para desarrollar el proyecto. No utiliza ninguna 
 
 El proyecto parte de los apuntes de clase acerca de programación en red, 
 también he utilizado el código proporcionado en **Acceso a datos** para la encriptación de mensajes.
-
 
 ---
 
