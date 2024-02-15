@@ -1,6 +1,6 @@
 <h1 align="center"> T.I.N.A.C. </h1>
 
-<pre align="center">
+<pre><div align="center">
 _______________________
 /\                      \
 \_|        TINAC        |
@@ -12,7 +12,7 @@ _______________________
   |                     |
     |   __________________|__
     \_/____________________/
-</pre>
+</div></pre>
 
 Un chat **cliente-servidor** desarrolado en Java utilizando `Socket` y `ServerSocket`.
 
