@@ -18,6 +18,10 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Cliente. Intercambia información con el servidor, recoge entrada del usuario
+ * y muestra la interfaz gráfica
+ */
 public class Client extends JFrame implements ChatConstants {
 
     // UI components
@@ -49,12 +53,18 @@ public class Client extends JFrame implements ChatConstants {
         this.port = port;
     }
 
+    /**
+     * Abre socket y flujos de entrada/salida
+     */
     private void connect() throws IOException {
         server = new Socket(ip, port);
         input = new BufferedReader(new InputStreamReader(server.getInputStream()));
         output = new PrintWriter(server.getOutputStream(), true);
     }
 
+    /**
+     * Cierra socket y flujos de entrada/salida
+     */
     private void close() throws IOException {
         input.close();
         output.close();
@@ -62,25 +72,40 @@ public class Client extends JFrame implements ChatConstants {
         dispose();
     }
 
+    /**
+     * 1. Establece conexión con el servidor
+     * 2. Recibe el nuevo puerto del servidor
+     * 3. Cierra la conexión
+     * 4. Vuelve a abrir la conexión en el puerto enviado por el servidor
+     */
     public void start() throws IOException {
-        connect();
+        connect(); // conecta con Server
         DataInputStream input = new DataInputStream(server.getInputStream());
         port = input.readInt();
         close();
-        connect();
-        initComponents();
-        login();
-        startListenerThread();
-        sendCredentials();
+        connect(); // conecta con ConnectionHandler
+        initComponents(); // Construye la GUI
+        login(); // muestra el diálogo de login
+        startListenerThread(); // lanza el hilo encargado de recibir mensajes
+        sendCredentials(); // envía las credenciales establecidas por el usuario en el diálogo de login
     }
 
+    /**
+     * Muestra el diálogo modal de inicio de sesión y espera a que
+     * el usuario envíe la información
+     */
     private void login() {
         JDialog login = new LoginDialog(this);
         login.setVisible(true);
     }
+
+    /**
+     * Envía las credenciales elegidas en el diálogo {@link LoginDialog}
+     * al servidor
+     */
     private void sendCredentials() {
-        output.println("/room " + initialRoom);
         output.println("/nick " + initialUsername);
+        output.println("/room " + initialRoom);
     }
 
     public void setInitialUsername(String user) {
@@ -91,6 +116,11 @@ public class Client extends JFrame implements ChatConstants {
         initialRoom = room;
     }
 
+    /**
+     * Lanza el hilo encargado de escuchar los mensajes del servidor
+     * "!room" y "!nick" son mensajes especiales del servidor, informan al cliente
+     * de su nuevo nick o sala a la que se ha cambiado.
+     */
     private void startListenerThread() {
         serverListener = new Thread(() -> {
             try {
@@ -113,16 +143,23 @@ public class Client extends JFrame implements ChatConstants {
         serverListener.start();
     }
 
+    /**
+     * Envía un mensaje al servidor
+     */
     private void sendMessage() {
         String text = inputField.getText().trim();
         boolean isClientCommand = handleClientCommands(text);
         if (!isClientCommand && !text.isEmpty()) {
-            output.println(text); // Send text to server
+            output.println(text); // Envía texto al servidor
         }
-        inputField.setText(""); // Clear input field
+        inputField.setText(""); // Vacía el texto del inputField
         active = !text.equals(COMMAND_QUIT);
     }
 
+    /**
+     * Gestiona comandos del cliente.
+     * El único comando del cliente es el de cambiar el fondo del chat
+     */
     private boolean handleClientCommands(String text) {
         if (text.equals(COMMAND_BACKGROUND_CHANGE)) {
             updateBackground();
@@ -131,6 +168,9 @@ public class Client extends JFrame implements ChatConstants {
         return false;
     }
 
+    /**
+     * Cambia el fondo del chat
+     */
     private void updateBackground() {
         if (backgrounds != null && !backgrounds.isEmpty()) {
             int nextIndex = backgrounds.indexOf(imagePanel.getBackgroundImage()) + 1;
@@ -157,9 +197,10 @@ public class Client extends JFrame implements ChatConstants {
         repaint();
     }
 
+    /**
+     * Todo el código para generar la ventana
+     */
     public void initComponents() {
-
-        // Initialize components
         chatArea = new JTextArea(10, 30);
         chatArea.setEditable(false);
         chatArea.setLineWrap(true);
@@ -191,7 +232,7 @@ public class Client extends JFrame implements ChatConstants {
             }
         });
 
-        // Set background image
+        // Establece imagen de fondo si es posible cargarla
         imagePanel = null;
         backgrounds = loadImages();
         setLayout(new BorderLayout());
@@ -225,7 +266,7 @@ public class Client extends JFrame implements ChatConstants {
             }
         });
 
-        // Set frame properties
+        // Propiedades de la ventana
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 400);
         setMinimumSize(new Dimension(300,300));
@@ -234,6 +275,9 @@ public class Client extends JFrame implements ChatConstants {
         setVisible(true);
     }
 
+    /**
+     * Carga las imágenes que pueden usarse como fondo
+     */
     private List<BufferedImage> loadImages() {
         String imgDir = "res/imgs/";
         List<BufferedImage> images = new ArrayList<>();

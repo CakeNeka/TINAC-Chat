@@ -5,6 +5,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+/**
+ * Un JPanel con una imagen en mosaico,
+ * es el fondo del chat
+ */
 public class ImagePanel extends JPanel {
     private Image backgroundImage;
     private int imageHeight;

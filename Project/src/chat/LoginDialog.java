@@ -7,6 +7,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+/**
+ * Diálogo modal para que el usuario elija un nick y una sala
+ * antes de entrar en el chat
+ */
 public class LoginDialog extends JDialog {
 
     Client parent;
@@ -61,14 +65,16 @@ public class LoginDialog extends JDialog {
     private void sendUserInfo(JTextField userField, JTextField roomField) {
         String user = userField.getText();
         String stringRoom = roomField.getText();
-        if (validInput(user, stringRoom)) {
+        if (isValidInput(user, stringRoom)) {
             parent.setInitialRoom(Integer.parseInt(stringRoom));
             parent.setInitialUsername(user);
             this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this,"Los valores introducidos no son válidos", "Error fatal -_-",JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    private boolean validInput(String user, String stringRoom) {
+    private boolean isValidInput(String user, String stringRoom) {
         try {
             Integer.parseInt(stringRoom);
         } catch (NumberFormatException e) {

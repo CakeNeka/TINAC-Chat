@@ -37,6 +37,6 @@ public interface ChatConstants {
             /netinfo Muestra información sobre la conexión
             """;
     String CREDITS = """
-            Chat desarrollado con amor por Martina Victoria (✿◡‿◡)
+            Chat desarrollado con mucho amor por Martina Victoria (✿◡‿◡)
             """;
 }
